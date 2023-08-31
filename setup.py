@@ -21,7 +21,7 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    install_requires=["windows-toasts", "infi.systray", "pysimplegui"],
+    install_requires=["windows-toasts", "infi.systray", "pysimplegui", "winreg", "typing"],
     packages=setuptools.find_packages(),
     python_requires=">=3.6",
     entry_points={
