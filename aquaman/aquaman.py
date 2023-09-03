@@ -2,6 +2,7 @@ from windows_toasts import InteractableWindowsToaster, Toast, ToastActivatedEven
 import threading
 from infi.systray import SysTrayIcon
 import pathlib
+from toast_manager import ToastMaster, AUMID
 
 from register_hkey_aumid import register_hkey
 
@@ -42,22 +43,11 @@ def alarm(timer:str):
     # Schedule the next thread
     start_thread(timer)
 
-    # Prepare the toaster for bread (or your notification)
-    # TODO: Try to get this AUMID automatically
-    toaster = InteractableWindowsToaster('Reminder', "Aquaman") #BUG: Application Text is not overriding the default AUMID
-    # Initialise the toast
-    newToast = Toast()  
-    # Set the body of the notification
-    newToast.text_fields = ['Drink Water 💧']
-    # Add buttons to close or acknowledge drinking water
-    newToast.AddAction(ToastButton('Done', 'done'))
-    newToast.AddAction(ToastButton('Stop Reminders', 'stop'))
-    # Set response handler for the toast
-    newToast.on_activated = toast_response_handler
+    # Set handler for the static class
+    ToastMaster.set_response_handler(toast_response_handler)
 
     # Schedule a new toast based on the time
-    # newTime = datetime.datetime.now() + datetime.timedelta(seconds=seconds)
-    toaster.show_toast(newToast)
+    ToastMaster.send_toast()
 
 # This is invoked when the system tray is closed
 def on_quit_callback(systray):
@@ -69,7 +59,7 @@ def on_quit_callback(systray):
 
 def aquaman(timer:str):
     # Register the app on windows registery, the function does nothing if it's already registered
-    register_hkey("Aquaman", "Aquaman", None)
+    register_hkey(AUMID, AUMID, pathlib.Path("water-drop.ico"))
 
     # Initialise a system tray to cancel the current process
     global systray_obj
