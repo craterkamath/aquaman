@@ -2,9 +2,9 @@ from windows_toasts import ToastActivatedEventArgs
 import threading
 from infi.systray import SysTrayIcon
 import pathlib
-from toast_manager import ToastMaster, AUMID
+from . import toast_manager
 
-from register_hkey_aumid import register_hkey
+from .register_hkey_aumid import register_hkey
 
 stop_lock = threading.Lock()
 stop_value = False
@@ -46,10 +46,10 @@ def alarm(timer:str):
     start_thread(timer)
 
     # Set handler for the static class
-    ToastMaster.set_response_handler(toast_response_handler)
+    toast_manager.ToastMaster.set_response_handler(toast_response_handler)
 
     # Schedule a new toast based on the time
-    ToastMaster.send_toast()
+    toast_manager.ToastMaster.send_toast()
 
 # This is invoked when the system tray is closed
 def on_quit_callback(systray):
@@ -61,7 +61,7 @@ def on_quit_callback(systray):
 
 def aquaman(timer:str):
     # Register the app on windows registery, the function does nothing if it's already registered
-    register_hkey(AUMID, AUMID, pathlib.Path(ICON_FILE))
+    register_hkey(toast_manager.AUMID, toast_manager.AUMID, pathlib.Path(ICON_FILE))
 
     # Initialise a system tray to cancel the current process
     global systray_obj
