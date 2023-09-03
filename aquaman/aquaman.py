@@ -1,4 +1,4 @@
-from windows_toasts import InteractableWindowsToaster, Toast, ToastActivatedEventArgs, ToastButton
+from windows_toasts import ToastActivatedEventArgs
 import threading
 from infi.systray import SysTrayIcon
 import pathlib
@@ -11,6 +11,8 @@ stop_value = False
 
 systray_lock = threading.Lock()
 systray_obj = None
+
+ICON_FILE = "water-drop.ico"
 
 # Parses input string of format 'HH:MM:SS' and returns seconds
 def parse_input_to_seconds(timeDuration:str) -> int:
@@ -59,12 +61,12 @@ def on_quit_callback(systray):
 
 def aquaman(timer:str):
     # Register the app on windows registery, the function does nothing if it's already registered
-    register_hkey(AUMID, AUMID, pathlib.Path("water-drop.ico"))
+    register_hkey(AUMID, AUMID, pathlib.Path(ICON_FILE))
 
     # Initialise a system tray to cancel the current process
     global systray_obj
     with systray_lock:
-        systray_obj = SysTrayIcon("water-drop.ico", "Aquaman", (), on_quit=on_quit_callback)
+        systray_obj = SysTrayIcon(ICON_FILE, "Aquaman", (), on_quit=on_quit_callback)
         systray_obj.start()
 
     # Start chaining of threads
